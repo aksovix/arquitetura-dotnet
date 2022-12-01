@@ -30,12 +30,11 @@ namespace ToDo.Web.Mvc.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Description")] CreateItemModel createItemModel)
+        public async Task<IActionResult> Create(CreateItemModel createItemModel)
         {
             if (ModelState.IsValid)
             {
-                var item = new Item(createItemModel.Description);
-                await repository.AddAsync(item);
+                await repository.AddAsync(createItemModel.ConvertToItem());
                 return RedirectToAction(nameof(Index));
             }
 
