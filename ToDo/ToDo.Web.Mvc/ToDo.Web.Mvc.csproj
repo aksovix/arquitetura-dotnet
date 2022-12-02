@@ -15,8 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ToDo.Domain\ToDo.Domain.csproj" />
-    <ProjectReference Include="..\ToDo.Infra.Data\ToDo.Infra.Data.csproj" />
+    <ProjectReference Include="..\ToDo.CrossCuting.IoC\ToDo.Infra.IoC.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,21 +1,21 @@
-﻿
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace ToDo.Web.Mvc.Models
+namespace ToDo.Application.Dtos.Item
 {
-    public class CreateItemModel
+    public class CreateItemRequestDto
     {
-        public CreateItemModel()
+        public CreateItemRequestDto()
         {
 
         }
 
-        public CreateItemModel(string description, bool done)
+        public CreateItemRequestDto(string description, bool done)
         {
             Description = description;
             Done = done;
         }
 
+        [Required]
         [StringLength(256, MinimumLength = 5)]
         public string Description { get; set; }
 

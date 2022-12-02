@@ -16,6 +16,52 @@ namespace ToDo.Infra.Data.Repositories
             connectionString = configuration.GetConnectionString("ToDoDb");
         }
 
+        public async Task AddAsync(Item item)
+        {
+            var query = "insert into Items(Id, Description, Done, CreatedAt) values(@Id, @Description, @Done, @CreatedAt)";
+            using (var con = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    con.Open();
+                    await con.ExecuteAsync(query, item);
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+                finally
+                {
+                    con.Close();
+                }
+            };
+        }
+
+        public async Task<Item> GetAsync(Guid Id)
+        {
+            Item result;
+            var query = "select * from Items where Id = @Id";
+            var parameter = new { Id = Id };
+            using (var con = new SqlConnection(connectionString))
+            {
+
+                try
+                {
+                    con.Open();
+                    result = await con.QueryFirstOrDefaultAsync<Item>(query, parameter);
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+                finally
+                {
+                    con.Close();
+                }
+                return result;
+            }
+        }
+
         public async Task<IEnumerable<Item>> GetAllAsync()
         {
             IEnumerable<Item> result;
@@ -38,27 +84,6 @@ namespace ToDo.Infra.Data.Repositories
                 return result;
             };
 
-        }
-
-        public async Task AddAsync(Item item)
-        {
-            var query = "insert into Items(Id, Description, Done, CreatedAt) values(@Id, @Description, @Done, @CreatedAt)";
-            using (var con = new SqlConnection(connectionString))
-            {    
-                try
-                {
-                    con.Open();
-                    await con.ExecuteAsync(query, item);
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
-                finally
-                {
-                    con.Close();
-                }
-            };
         }
 
         public async Task UpdateAsync(Item item)
@@ -104,31 +129,6 @@ namespace ToDo.Infra.Data.Repositories
                     con.Close();
                 }
             };
-        }
-
-        public async Task<Item> getAsync(Guid Id)
-        {
-            Item result;
-            var query = "select * from Items where Id = @Id";
-            var parameter = new { Id = Id };
-            using (var con = new SqlConnection(connectionString))
-            {
-
-                try
-                {
-                    con.Open();
-                    result = await con.QueryFirstOrDefaultAsync<Item>(query, parameter);
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
-                finally
-                {
-                    con.Close();
-                }
-                return result;
-            }
         }
 
     }

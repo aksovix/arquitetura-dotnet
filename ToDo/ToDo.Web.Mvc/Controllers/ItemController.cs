@@ -1,24 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ToDo.Application.Dtos.Item;
+using ToDo.Application.Interfaces;
 using ToDo.Domain.Entities;
 using ToDo.Domain.Interface;
-using ToDo.Web.Mvc.Extensions;
 using ToDo.Web.Mvc.Models;
 
 namespace ToDo.Web.Mvc.Controllers
 {
     public class ItemController : Controller
     {
-        protected IItemRepository repository;
+        protected IItemAppService itemAppService;
 
-        public ItemController(IItemRepository repository)
+        public ItemController(IItemAppService itemAppService)
         {
-            this.repository = repository;
+            this.itemAppService = itemAppService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var items = await repository.GetAllAsync();
+            var items = await itemAppService.GetAllAsync();
 
             return View(items);
         }
@@ -30,40 +31,40 @@ namespace ToDo.Web.Mvc.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateItemModel createItemModel)
+        public async Task<IActionResult> Create(CreateItemRequestDto createItemRequestDto)
         {
             if (ModelState.IsValid)
             {
-                await repository.AddAsync(createItemModel.ConvertToItem());
+                await itemAppService.AddAsync(createItemRequestDto);
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(createItemModel);
+            return View(createItemRequestDto);
         }
 
         [HttpGet("[action]/{id}")]
         public async Task<IActionResult> Edit([FromRoute] Guid Id)
         {
-            Item item = await repository.getAsync(Id);
-            return View(item.ConvertToUpdateItemModel());
+            var itemResponseDto = await itemAppService.GetAsync(Id);
+            return View(itemResponseDto);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Update(UpdateItemModel updateItemModel)
+        public async Task<IActionResult> Update(UpdateItemRequestDto updateItemRequestDto)
         {
             if (ModelState.IsValid)
             {
-                await repository.UpdateAsync(updateItemModel.ConvertToItem());
+                await itemAppService.UpdateAsync(updateItemRequestDto);
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(updateItemModel);
+            return View(updateItemRequestDto);
         }
 
         [HttpGet("[action]/{id}")]
         public async Task<IActionResult> Delete([FromRoute] Guid Id)
         {
-            await repository.DeleteAsync(Id);
+            await itemAppService.DeleteAsync(Id);
             return RedirectToAction(nameof(Index));
             
         }
