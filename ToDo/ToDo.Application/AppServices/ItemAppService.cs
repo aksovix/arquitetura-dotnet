@@ -21,11 +21,6 @@ namespace ToDo.Application.AppServices
             await repository.AddAsync(mapper.Map<Item>(createItemRequestDto));
         }
 
-        public async Task DeleteAsync(Guid id)
-        {
-            await repository.DeleteAsync(id);
-        }
-
         public async Task<ItemResponseDto> GetAsync(Guid id)
         {
             var response = await repository.GetAsync(id);
@@ -41,6 +36,11 @@ namespace ToDo.Application.AppServices
         public async Task UpdateAsync(UpdateItemRequestDto updateItemRequestDto)
         {
             await repository.UpdateAsync(mapper.Map<Item>(updateItemRequestDto));
+        }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            await repository.DeleteAsync(id);
         }
     }
 }

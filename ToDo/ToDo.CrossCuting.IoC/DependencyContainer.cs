@@ -1,8 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using ToDo.Application.AppServices;
 using ToDo.Application.AutoMapper;
 using ToDo.Application.Interfaces;
 using ToDo.Domain.Interface;
+using ToDo.Infra.Data.Context;
 using ToDo.Infra.Data.Repositories;
 
 namespace ToDo.Infra.IoC
@@ -26,6 +28,15 @@ namespace ToDo.Infra.IoC
         {
             services.AddScoped<IItemAppService, ItemAppService>();
             services.AddScoped<IItemRepository, ItemRepository>();
+            return services;
+        }
+        public static IServiceCollection ConfigureDbContext(this IServiceCollection services, string connectionString)
+        {
+            services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseSqlServer(connectionString);
+            });
+
             return services;
         }
     }
